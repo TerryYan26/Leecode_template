@@ -1,0 +1,72 @@
+# 🧠 Java 双指针与滑动窗口模板笔记
+
+---
+
+## 🔹 相向双指针模板 (Two Pointer Template)
+
+**适用场景：**
+- 已排序数组的目标搜索（如 Two Sum）
+- 回文检测
+- 容器盛水 / 接雨水
+- 数组反转
+
+```java
+public class TwoPointerTemplate {
+
+    /**
+     * 相向双指针通用模板
+     * 用于已排序数组的搜索 / 匹配类问题
+     *
+     * @param nums 已排序数组
+     * @param target 目标值
+     * @return 满足条件的两个索引 (或 [-1, -1] 表示未找到)
+     */
+    public static int[] twoPointerSearch(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+
+        while (left < right) {
+            int sum = nums[left] + nums[right];
+
+            if (sum == target) {
+                return new int[]{left, right};
+            } else if (sum < target) {
+                left++;   // 当前和太小，左指针右移
+            } else {
+                right--;  // 当前和太大，右指针左移
+            }
+        }
+
+        return new int[]{-1, -1};
+    }
+
+    /**
+     * 字符串相向双指针检查是否为回文
+     */
+    public static boolean isPalindrome(String s) {
+        int left = 0;
+        int right = s.length() - 1;
+
+        while (left < right) {
+            while (left < right && !Character.isLetterOrDigit(s.charAt(left))) left++;
+            while (left < right && !Character.isLetterOrDigit(s.charAt(right))) right--;
+
+            if (Character.toLowerCase(s.charAt(left)) != Character.toLowerCase(s.charAt(right))) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 3, 4, 6, 8, 11};
+        int target = 10;
+        int[] result = twoPointerSearch(nums, target);
+        System.out.println("Result: [" + result[0] + ", " + result[1] + "]");
+
+        System.out.println(isPalindrome("A man, a plan, a canal: Panama")); // true
+        System.out.println(isPalindrome("race a car")); // false
+    }
+}
